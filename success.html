@@ -28,8 +28,45 @@
 <body>
     <img src="Logo_PROTAAPP.jpg" alt="ProtAAPP logo">
     <h3>RETO CONSEGUIDO</h3>
-<div><p>La solución al reto es: La validación cliente NO es seguridad</p>
-<p>y este es el flag: <strong>flag{b3d021218f0089f6e0fbb7cb64ebb408}</strong></p></div>
+<div>
+    <p>La solución al reto es: La validación cliente NO es seguridad</p>
+    <p>y este es el flag: <strong id="flag">[cifrado]</strong></p>
+</div>
+
+<script>
+    (function () {
+        var encryptedFlag = "Mh5VBBBMYxZfRnBzYWgyQgRbUkhmF18SIyNnMzZEAAYJTGRCVwk=";
+
+        function xorDecrypt(base64Value, key) {
+            var data = atob(base64Value);
+            var output = [];
+            for (var i = 0; i < data.length; i++) {
+                output.push(
+                    String.fromCharCode(
+                        data.charCodeAt(i) ^ key.charCodeAt(i % key.length)
+                    )
+                );
+            }
+            return output.join("");
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var key = params.get("k") || "";
+        var flagTarget = document.getElementById("flag");
+
+        if (!key) {
+            flagTarget.textContent = "[clave requerida]";
+            return;
+        }
+
+        var decrypted = xorDecrypt(encryptedFlag, key);
+        if (decrypted.indexOf("flag{") === 0) {
+            flagTarget.textContent = decrypted;
+        } else {
+            flagTarget.textContent = "[clave incorrecta]";
+        }
+    })();
+</script>
 
 </body>
 </html>
